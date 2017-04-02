@@ -94,4 +94,5 @@ contract TokenTest is Test {
         assertEq(user1.myBalance(), 0, "unexpected balance for user1") ;
         assertEq(user2.myBalance(), 100, "unexpected balance for user2") ;
      }
+
 }
