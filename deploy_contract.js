@@ -4,7 +4,7 @@ const Web3 = require('web3') ; // Note the capital "web3" is initialised below
 const solc = require('solc') ;
 
 if (process.argv.length < 3) {
-  console.log("usage: node deploy_contract.js sourcefile.sol createParameter") ;
+  console.log("usage: node deploy_contract.js sourcefile.sol createParameter [contractFile]") ;
   process.exit(1) ;
 }
 
@@ -13,6 +13,11 @@ const source = fs.readFileSync(file, 'utf8') ;
 const flatSource = flattenString(source) ;
 
 const createParameter = process.argv[3] ;
+
+var contractFile ;
+if (process.argv.length > 3) {
+  contractFile = process.argv[4] ;
+}
 
 const web3 = setWeb3Provider(Web3) ;
 
@@ -47,9 +52,11 @@ function createContractCallback(e, contract) {
           contract.transactionHash + " waiting to be mined...");
       } else {
         console.log("Contract mined! Address: " + contract.address);
-        var fileName = contract.address + ".json" ;
-        fs.writeFileSync(fileName, JSON.stringify(contract), "utf8") ;
-        console.log("Contract description written to " + fileName);
+        if (contractFile == null) {
+          contractFile = contract.address + ".json" ;
+        }
+        fs.writeFileSync(contractFile, JSON.stringify(contract), "utf8") ;
+        console.log("Contract description written to " + contractFile);
       }
     } else {
       console.log(e) ;
